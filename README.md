@@ -6,7 +6,7 @@ When run, the script looks for a file, *ip.txt*, in the same directory as the sc
 
 The result of every run is written to a log file, *log.txt*, also in the same directory as the script. The log can be limited to a specific number of lines, I started off with 120 so only the last two hours are logged.
 
-### Sample Log Entries ###
+#### Sample Log Entries ####
 
 >2022/12/28 13:10:50 - No change detected  
 >2022/12/28 15:53:42 - No change detected  
@@ -16,7 +16,7 @@ The result of every run is written to a log file, *log.txt*, also in the same di
 >2022/12/28 15:55:42 - New: 192.168.1.242  
 >2022/12/28 15:57:31 - No change detected  
 
-### Sample Alert Email Text ###
+#### Sample Alert Email Text ####
 
 >From: DDNS Updater <myalertaddress@mydomain.com\>  
 >To: Me <me@mydomain.com\>  
@@ -28,10 +28,10 @@ The result of every run is written to a log file, *log.txt*, also in the same di
 >server1.mydomain.com updated successfully  
 >server2.mydomain.com updated successfully  
 
-### ENV Information ###
+#### ENV Information ####
 
 The information needed to update Cloudflare and send emails is stored in *.env*, located in the same directory as the script. Please refer to *sample_env* if you wish to use this script yourself.
 
-### Future Improvements ###
+#### Future Improvements ####
 
 I'd like to log errors to a second log file that will be more persistent, so I can improve the script to handle those as they come up through normal use.
