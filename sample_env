@@ -1,0 +1,15 @@
+#Cloudflare
+ZONE_ID=[cloudflare zone id]
+API_TOKEN=[cloudflare api token]
+ZONE_NAME=mydomain.com
+RECORD_NAMES=server1.mydomain.com,server2.mydomain.com
+
+#Email Send Info
+EMAIL_AUTH_ADDRESS=myemail@mydomain.com
+EMAIL_AUTH_PASSWORD=[email password]
+EMAIL_SERVER=smtp.mymailhost.com
+EMAIL_PORT=465
+
+EMAIL_SENDER_NAME=DDNS Updater
+EMAIL_SENDER_ADDRESS=alerts@mydomain.com
+EMAIL_RECIPIENT_ADDRESS=me@mydomain.com
