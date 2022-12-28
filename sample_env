@@ -11,5 +11,5 @@ EMAIL_SERVER=smtp.mymailhost.com
 EMAIL_PORT=465
 
 EMAIL_SENDER_NAME=DDNS Updater
-EMAIL_SENDER_ADDRESS=alerts@mydomain.com
+EMAIL_SENDER_ADDRESS=myalertaddress@mydomain.com
 EMAIL_RECIPIENT_ADDRESS=me@mydomain.com
