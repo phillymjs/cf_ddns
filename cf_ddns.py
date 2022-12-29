@@ -1,3 +1,4 @@
+import os
 import time
 import requests
 import json
@@ -22,8 +23,8 @@ email_port = config('EMAIL_PORT')
 
 # Other Variables
 wan_ip_url = "http://ipv4.icanhazip.com"
-data_file = "ip.txt"
-log_file = "log.txt"
+data_file = os.path.realpath(os.path.dirname(__file__)) + "/ip.txt"
+log_file = os.path.realpath(os.path.dirname(__file__)) + "/log.txt"
 maxloglines = 120
 
 def write_log(*logmessages):
@@ -56,7 +57,7 @@ def write_data(ip):
 def current_ip():
 	try:
 		response = requests.get(wan_ip_url)
-		if response.status_code == 200:
+		if response.status_code == 200 and response.text != "None":
 			return response.text
 		else:
 			write_log("Connected but could not get the remote IP")
@@ -113,7 +114,7 @@ def send_email(subject: str, body: str):
 # Main
 while True:
 	current, previous = (current_ip()), (previous_ip())
-	if current and previous != "None":
+	if "None" not in { current, previous }:
 		if current != previous:
 			write_log("IP changed", "Old: " + previous.rstrip('\n'), "New: " + current.rstrip('\n'))
 			write_data(current)
