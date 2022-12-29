@@ -1,7 +1,6 @@
 #Cloudflare
 ZONE_ID=[cloudflare zone id]
 API_TOKEN=[cloudflare api token]
-ZONE_NAME=mydomain.com
 RECORD_NAMES=server1.mydomain.com,server2.mydomain.com
 
 #Email Send Info
