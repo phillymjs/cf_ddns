@@ -2,7 +2,7 @@
 
 My second Python project and the first one ready for public critique, this is a Python3 script to monitor my home WAN IP for changes and update my Cloudflare DNS records when changes happen. It's replacing a quick and dirty Bash script that does the same thing but doesn't handle unexpected results very well. My desire to start learning Python recently converged with my annoyance at that Bash script constantly sending me junk emails, and this is the result.
 
-When run, the script looks for a file, *ip.txt*, in the same directory as the script. If not found, it writes the current WAN IP to the file and exits. If found, it reads the contents and compares them to the current WAN IP. If the WAN IP is different from the IP read from the file, the specified Cloudflare DNS entries are updated with the new IP, and an email is sent to notify me that the change happened. The email contains the old and new IPs and the results of each Cloudflare DNS record change attempt. The script then waits 60 seconds before running again.
+The script should be run via cron job at a repeating interval. Mine runs every minute. When run, the script looks for a file, *ip.txt*, in the same directory as the script. If not found, it writes the current WAN IP to the file and exits. If found, it reads the contents and compares them to the current WAN IP. If the WAN IP is different from the IP read from the file, the specified Cloudflare DNS entries are updated with the new IP, and an email is sent to notify me that the change happened. The email contains the old and new IPs and the results of each Cloudflare DNS record change attempt.
 
 The result of every run is written to a log file, *log.txt*, also in the same directory as the script. The log can be limited to a specific number of lines, I set it to 120 by default so only the last two hours are logged.
 
@@ -13,7 +13,8 @@ The result of every run is written to a log file, *log.txt*, also in the same di
 >2022/12/28 15:54:42 - No change detected  
 >2022/12/28 15:55:42 - IP changed  
 >2022/12/28 15:55:42 - Old: 192.168.1.236  
->2022/12/28 15:55:42 - New: 192.168.1.242  
+>2022/12/28 15:55:42 - New: 192.168.1.242
+>2022/12/28 15:55:44 - Update email sent successfully    
 >2022/12/28 15:57:31 - No change detected  
 
 #### Sample Alert Email Text ####
@@ -31,6 +32,15 @@ The result of every run is written to a log file, *log.txt*, also in the same di
 #### ENV Information ####
 
 The information needed to update Cloudflare and send emails is stored in *.env*, located in the same directory as the script. Please refer to *sample_env* if you wish to use this script yourself.
+
+#### Development History ####
+
+I have rapidly improved this script over the last few days since it made its debut on Github, based on feedback from more experienced coders and additional things I've picked up. Among the improvements so far:
+
+- F-strings are now used wherever possible, instead of using older string formatting methods
+- Constants are read directly from .env when needed, instead of being assigned to variables at the beginning of the script
+- Success/failure of notification email sending is now logged
+- The script is now meant to be repeatedly launched by cron, instead running in a while True loop
 
 #### Future Improvements ####
 
