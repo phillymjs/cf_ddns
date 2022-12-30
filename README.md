@@ -40,7 +40,7 @@ I have rapidly improved this script over the last few days since it made its deb
 - F-strings are now used wherever possible, instead of using older string formatting methods
 - Constants are read directly from .env when needed, instead of being assigned to variables at the beginning of the script
 - Success/failure of notification email sending is now logged
-- The script is now meant to be repeatedly launched by cron, instead running in a while True loop
+- The script is now meant to be repeatedly launched by cron, instead of running in a while True loop
 
 #### Future Improvements ####
 
