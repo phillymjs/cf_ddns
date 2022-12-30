@@ -13,7 +13,7 @@ The result of every run is written to a log file, *log.txt*, also in the same di
 >2022/12/28 15:54:42 - No change detected  
 >2022/12/28 15:55:42 - IP changed  
 >2022/12/28 15:55:42 - Old: 192.168.1.236  
->2022/12/28 15:55:42 - New: 192.168.1.242
+>2022/12/28 15:55:42 - New: 192.168.1.242  
 >2022/12/28 15:55:44 - Update email sent successfully    
 >2022/12/28 15:57:31 - No change detected  
 
