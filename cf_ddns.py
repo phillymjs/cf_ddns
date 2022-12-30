@@ -21,7 +21,7 @@ def write_log(*logmessages):
 		now = datetime.now()
 		timestamp = now.strftime("%Y/%m/%d %H:%M:%S")
 		for logmessage in logmessages:
-			log_entry = "%(timestamp)s - %(logmessage)s\n" % {"timestamp": timestamp, "logmessage": logmessage}
+			log_entry = f"{timestamp} - {logmessage}\n"
 			logfile.writelines(log_entry)
 	logfile.close()
 	
@@ -60,58 +60,53 @@ def previous_ip():
 	if path.is_file():
 		return read_data()
 	else:
-		write_log("Previous IP not recorded, writing to %(data_file)s" % {"data_file": DATA_FILE})
+		write_log(f"Previous IP not recorded, writing to {DATA_FILE}")
 		write_data(current_ip())
 		return "None"
 
 def set_ip(record_name: str, current_ip: str):
-	zone_id_url = (
-		"https://api.cloudflare.com/client/v4/zones/%(zone_id)s/dns_records?name=%(record_name)s"
-		% {"zone_id": config('ZONE_ID'), "record_name": record_name}
-	)
-	
+	zone_id_url = f"https://api.cloudflare.com/client/v4/zones/{config('ZONE_ID')}/dns_records?name={record_name}"
+
 	headers= {
-		"Authorization": "Bearer " + config('API_TOKEN'),
+		"Authorization": f"Bearer {config('API_TOKEN')}",
 		"Content-Type": "application/json",
 	}
 	
 	response = requests.get(zone_id_url, headers=headers)
 	record_id = json.loads(response.text)['result'][0]['id']
 	
-	update_ip_url = (
-		"https://api.cloudflare.com/client/v4/zones/%(zone_id)s/dns_records/%(record_id)s"
-		% {"zone_id": config('ZONE_ID'), "record_id": record_id}
-	)
+	update_ip_url = f"https://api.cloudflare.com/client/v4/zones/{config('ZONE_ID')}/dns_records/{record_id}"
 	
 	payload = {"type": "A", "name": record_name, "content": current_ip, "proxied": record_proxied}
 	response = requests.put(update_ip_url, headers=headers, data=json.dumps(payload))
 	response_dict = json.loads(response.text)
 	if response_dict['success']:
-		return "%(record_name)s updated successfully\n" % {"record_name": record_name}
+		return f"{record_name} updated successfully\n"
 
 def send_email(subject: str, body: str):
 	msg = EmailMessage()
 	msg['Subject'] = subject
-	msg['From'] = config('EMAIL_SENDER_NAME') + " <" + config('EMAIL_SENDER_ADDRESS') + ">"
+	msg['From'] = f"{config('EMAIL_SENDER_NAME')} <{config('EMAIL_SENDER_ADDRESS')}>"
 	msg['To'] = config('EMAIL_RECIPIENT_ADDRESS')
 	msg.set_content(body)
-
 	with smtplib.SMTP_SSL(config('EMAIL_SERVER'), config('EMAIL_PORT')) as smtp:
 		smtp.login(config('EMAIL_AUTH_ADDRESS'), config('EMAIL_AUTH_PASSWORD'))
 		smtp.send_message(msg)
 		
 # Main
-while True:
-	current, previous = (current_ip()), (previous_ip())
-	if "None" not in { current, previous }:
-		if current != previous:
-			write_log("IP changed", "Old: %(previous)s" % {"previous":previous.rstrip('\n')}, "New: %(current)s" % {"current":current.rstrip('\n')})
-			write_data(current)
-			email_body = "IP changed\nOld: %(previous)s\nNew: %(current)s\n" % {"previous":previous.rstrip('\n'),"current":current.rstrip('\n')}
-			for record_name in record_names:
-				email_body += set_ip(record_name, current)
+current, previous = (current_ip().rstrip('\n')), (previous_ip().rstrip('\n'))
+if "None" not in { current, previous }:
+	if current != previous:
+		write_log("IP changed", f"Old: {previous}", f"New: {current}")
+		write_data(current)
+		email_body = f"IP changed\nOld: {previous}\nNew: {current}\n"
+		for record_name in record_names:
+			email_body += set_ip(record_name, current)
+		try:
 			send_email("DDNS Updated", email_body)
-		elif previous != "None":
-			write_log("No change detected")
-		truncate_log()
-	time.sleep(60)
+			write_log("Update email sent successfully")
+		except:
+			write_log("Update email was not sent successfully")
+	elif previous != "None":
+		write_log("No change detected")
+	truncate_log()
