@@ -4,7 +4,7 @@ My second Python project and the first one ready for public critique, this is a 
 
 The script should be run via cron job at a repeating interval. Mine runs every three minutes. When run, the script looks for a file, *ip.txt*, in the same directory as the script. If not found, it writes the current WAN IP to the file and exits. If found, it reads the contents and compares them to the current WAN IP. If the WAN IP is different from the IP read from the file, the specified Cloudflare DNS entries are updated with the new IP, and an email is sent to notify me that the change happened. The email contains the old and new IPs and the results of each Cloudflare DNS record change attempt.
 
-The result of every run is written to a log file, *log.txt*, also in the same directory as the script. The log can be limited to a specific number of lines, I set it to 120 by default so only the last two hours are logged.
+The result of every run is written to a log file, *log.txt*, also in the same directory as the script. The log can be limited to a specific number of lines, I set it to 120 by default, but when the script runs every three minutes that's sufficient to log several hours.
 
 #### Sample Log Entries ####
 
